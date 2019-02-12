@@ -34,25 +34,34 @@ export class HomePage {
     this.numEntries = this.resultsList.length;
   }
 
-  async submit() {
-    // Send to the database.
-    this.dataList.add({
-      value: this.simple.get('text').value,
-      time: new Date().getTime(),
-    });
-    this.getData();
+  clearTextEntryField() {
     // Reset the GUI field to empty.
     this.simple.setValue({ 'text': '' });
+  }
+
+  async submit() {
+    const value = this.simple.get('text').value;
+
+    if (this.resultsList.includes(value)) {
+      this.clearTextEntryField();
+      return;
+    }
+
+    // Send to the database.
+    this.dataList.add({
+      value,
+      time: new Date().getTime(),
+    });
+    this.getData();     // update cached list
+    this.clearTextEntryField();
   }
 
   // Return the document id (which was created automatically) for the given
   // text value.
   async getIdForText(entryText: string): Promise<string> {
     const docs = await this.dataList.where('value', '==', entryText).get();
-    // console.log('docs size is', docs.size);
     let docId: string;
     docs.forEach((doc) => docId = doc.id);
-    // TODO: assumes one match!!!
     return docId;
   }
 
@@ -61,8 +70,7 @@ export class HomePage {
     const docId = await this.getIdForText(entryText);
     console.log('docId is', docId);
     this.dataList.doc(docId).delete();
-    // update the cached list.
-    this.getData();
+    this.getData();   // update the cached list.
   }
 
   getAllResults(): string[] {
