@@ -12,12 +12,7 @@ export class AppComponent {
   constructor(
   ) {
     firebase.initializeApp({
-      apiKey: 'AIzaSyDeOgRwEdboVJ2e_SPFpuJJsYKS9aP31Uc',
-      authDomain: 'event-manager-26d59.firebaseapp.com',
-      databaseURL: 'https://event-manager-26d59.firebaseio.com',
-      projectId: 'event-manager-26d59',
-      storageBucket: '',
-      messagingSenderId: '482629668920'
+      // put your project information here from the firestore console.
     });
     firebase.firestore().enablePersistence().catch((err) => {
       console.log('Offline persistence set up failed', err);
